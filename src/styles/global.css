@@ -153,18 +153,13 @@ main {
 	letter-spacing: 0.02em;
 	line-height: 1.2;
 	cursor: pointer;
-	outline: 3px solid transparent;
-	outline-offset: 2px;
+	outline: none;
 }
 
 .content-button:hover,
 .content-button:focus-visible {
 	background: var(--color-ink);
 	color: var(--color-page);
-}
-
-.content-button:focus-visible {
-	outline-color: var(--color-border);
 }
 
 html[data-theme='dark'] .shiki,

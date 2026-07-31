@@ -52,6 +52,51 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 		gap: 0.5rem;
 	}
 
+	.site-controls :global(.site-control) {
+		position: relative;
+		display: inline-flex;
+	}
+
+	.site-controls :global(.site-control__tooltip) {
+		position: absolute;
+		top: calc(100% + 0.35rem);
+		right: 0;
+		z-index: 1;
+		box-sizing: border-box;
+		width: max-content;
+		max-width: min(16rem, calc(100vw - 2 * var(--site-controls-inset)));
+		padding: 0.4rem 0.6rem;
+		border: 1px solid var(--color-border);
+		background: var(--color-page);
+		color: var(--color-ink);
+		font-family: var(--font-display);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		line-height: 1.3;
+		white-space: nowrap;
+		pointer-events: none;
+		opacity: 0;
+		visibility: hidden;
+		translate: 0 -0.15rem;
+		transition:
+			opacity 0.15s ease,
+			visibility 0.15s ease,
+			translate 0.15s ease;
+	}
+
+	.site-controls :global(.site-control:hover .site-control__tooltip),
+	.site-controls :global(.site-control:focus-within .site-control__tooltip) {
+		opacity: 1;
+		visibility: visible;
+		translate: 0 0;
+	}
+
+	:global(html[data-motion='reduce']) .site-controls :global(.site-control__tooltip) {
+		transition-duration: 0.01ms;
+		translate: none;
+	}
+
 	@media (min-width: 640px) {
 		.site-controls {
 			--site-controls-inset: 2.5rem; /* header sm:p-10 と揃える */
