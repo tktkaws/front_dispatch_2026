@@ -368,4 +368,20 @@ const displayDate =
 			}
 		}
 	}
+
+	:global(html[data-motion='reduce']) .article-menu,
+	:global(html[data-motion='reduce']) .article-menu__panel {
+		transition-duration: 0.01ms;
+		transition-delay: 0s;
+	}
+
+	:global(html[data-motion='reduce']) .article-menu__panel {
+		translate: none;
+	}
+
+	:global(html[data-motion='reduce']) .article-menu.is-open .article-menu__panel {
+		@starting-style {
+			translate: none;
+		}
+	}
 </style>

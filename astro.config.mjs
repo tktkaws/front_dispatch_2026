@@ -18,6 +18,7 @@ export default defineConfig({
 		sitemap(),
 		swup({
 			containers: ['main', 'header'],
+			globalInstance: true,
 		}),
 	],
 	markdown: {

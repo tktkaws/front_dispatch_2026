@@ -61,6 +61,39 @@ const { title, description, image = FallbackImage } = Astro.props;
 		});
 	})();
 </script>
+<script is:inline>
+	(function () {
+		const STORAGE_KEY = 'motion-preference';
+
+		function resolve() {
+			const stored = localStorage.getItem(STORAGE_KEY);
+			if (stored === 'motion' || stored === 'reduce') return stored;
+			return matchMedia('(prefers-reduced-motion: reduce)').matches ? 'reduce' : 'motion';
+		}
+
+		function apply(preference) {
+			document.documentElement.dataset.motion = preference;
+			document.dispatchEvent(new CustomEvent('motion-preference-change', { detail: preference }));
+		}
+
+		function toggle() {
+			const next = resolve() === 'reduce' ? 'motion' : 'reduce';
+			localStorage.setItem(STORAGE_KEY, next);
+			apply(next);
+		}
+
+		function prefersReduced() {
+			return resolve() === 'reduce';
+		}
+
+		window.__motionPreference = { STORAGE_KEY, resolve, apply, toggle, prefersReduced };
+		apply(resolve());
+
+		matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', () => {
+			if (!localStorage.getItem(STORAGE_KEY)) apply(resolve());
+		});
+	})();
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
@@ -89,5 +122,6 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 
-<!-- Article menu (survives swup navigations; reinits on astro:page-load) -->
+<!-- Client scripts that survive swup navigations -->
 <script src="../scripts/article-menu.ts"></script>
+<script src="../scripts/swup-motion.ts"></script>

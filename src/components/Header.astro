@@ -1,5 +1,6 @@
 ---
 import { SITE_TITLE } from '../consts';
+import MotionToggle from './MotionToggle.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
@@ -18,7 +19,10 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 		</header>
 	)
 }
-<ThemeToggle />
+<div class="site-controls">
+	<MotionToggle />
+	<ThemeToggle />
+</div>
 
 <style>
 	header {
@@ -32,6 +36,31 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 		header {
 			border-left: 0;
 			border-right: 0;
+		}
+	}
+
+	.site-controls {
+		--site-controls-inset: 1.5rem; /* header p-6 と揃える */
+		box-sizing: border-box;
+		position: fixed;
+		top: var(--site-controls-inset);
+		right: calc(max(0px, (100vw - 1600px) / 2) + var(--site-controls-inset));
+		z-index: 50;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.5rem;
+	}
+
+	@media (min-width: 640px) {
+		.site-controls {
+			--site-controls-inset: 2.5rem; /* header sm:p-10 と揃える */
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.site-controls {
+			--site-controls-inset: 3rem; /* header lg:p-12 と揃える */
 		}
 	}
 </style>
