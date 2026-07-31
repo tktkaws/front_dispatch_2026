@@ -19,6 +19,7 @@ export default defineConfig({
 		swup({
 			containers: ['main', 'header'],
 			globalInstance: true,
+			theme: 'fade',
 		}),
 	],
 	markdown: {
