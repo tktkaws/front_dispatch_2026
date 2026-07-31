@@ -15,6 +15,7 @@
     "@astrojs/mdx": "^7.0.4",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
+    "@swup/astro": "^1.8.0",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.1.4",
     "gen-interface-jp": "^0.8.0",

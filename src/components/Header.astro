@@ -1,5 +1,6 @@
 ---
 import { SITE_TITLE } from '../consts';
+import MotionToggle from './MotionToggle.astro';
 import ThemeToggle from './ThemeToggle.astro';
 
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
@@ -18,7 +19,10 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 		</header>
 	)
 }
-<ThemeToggle />
+<div class="site-controls">
+	<MotionToggle />
+	<ThemeToggle />
+</div>
 
 <style>
 	header {
@@ -32,6 +36,76 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 		header {
 			border-left: 0;
 			border-right: 0;
+		}
+	}
+
+	.site-controls {
+		--site-controls-inset: 1.5rem; /* header p-6 と揃える */
+		box-sizing: border-box;
+		position: fixed;
+		top: var(--site-controls-inset);
+		right: calc(max(0px, (100vw - 1600px) / 2) + var(--site-controls-inset));
+		z-index: 50;
+		display: flex;
+		flex-wrap: wrap;
+		justify-content: flex-end;
+		gap: 0.5rem;
+	}
+
+	.site-controls :global(.site-control) {
+		position: relative;
+		display: inline-flex;
+	}
+
+	.site-controls :global(.site-control__tooltip) {
+		position: absolute;
+		top: calc(100% + 0.35rem);
+		right: 0;
+		z-index: 1;
+		box-sizing: border-box;
+		width: max-content;
+		max-width: min(16rem, calc(100vw - 2 * var(--site-controls-inset)));
+		padding: 0.4rem 0.6rem;
+		border: 1px solid var(--color-border);
+		background: var(--color-page);
+		color: var(--color-ink);
+		font-family: var(--font-display);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.02em;
+		line-height: 1.3;
+		white-space: nowrap;
+		pointer-events: none;
+		opacity: 0;
+		visibility: hidden;
+		translate: 0 -0.15rem;
+		transition:
+			opacity 0.15s ease,
+			visibility 0.15s ease,
+			translate 0.15s ease;
+	}
+
+	.site-controls :global(.site-control:hover .site-control__tooltip),
+	.site-controls :global(.site-control:focus-within .site-control__tooltip) {
+		opacity: 1;
+		visibility: visible;
+		translate: 0 0;
+	}
+
+	:global(html[data-motion='reduce']) .site-controls :global(.site-control__tooltip) {
+		transition-duration: 0.01ms;
+		translate: none;
+	}
+
+	@media (min-width: 640px) {
+		.site-controls {
+			--site-controls-inset: 2.5rem; /* header sm:p-10 と揃える */
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.site-controls {
+			--site-controls-inset: 3rem; /* header lg:p-12 と揃える */
 		}
 	}
 </style>

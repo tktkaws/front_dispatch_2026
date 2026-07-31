@@ -51,6 +51,10 @@ html[data-theme='dark'] {
 	color-scheme: dark;
 }
 
+html[data-motion='reduce'] {
+	--swup-fade-theme-duration: 0s;
+}
+
 body {
 	font-family: var(--font-sans);
 	font-size-adjust: from-font;
@@ -149,18 +153,13 @@ main {
 	letter-spacing: 0.02em;
 	line-height: 1.2;
 	cursor: pointer;
-	outline: 3px solid transparent;
-	outline-offset: 2px;
+	outline: none;
 }
 
 .content-button:hover,
 .content-button:focus-visible {
 	background: var(--color-ink);
 	color: var(--color-page);
-}
-
-.content-button:focus-visible {
-	outline-color: var(--color-border);
 }
 
 html[data-theme='dark'] .shiki,

@@ -2,6 +2,7 @@
 
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
+import swup from '@swup/astro';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
 
@@ -12,7 +13,15 @@ export default defineConfig({
 		'/blog': '/',
 		'/blog/': '/',
 	},
-	integrations: [mdx(), sitemap()],
+	integrations: [
+		mdx(),
+		sitemap(),
+		swup({
+			containers: ['main', 'header'],
+			globalInstance: true,
+			theme: 'fade',
+		}),
+	],
 	markdown: {
 		shikiConfig: {
 			themes: {

@@ -1,58 +1,78 @@
 ---
 ---
 
-<button
-	type="button"
-	class="content-button theme-toggle"
-	data-theme-toggle
-	aria-label="カラーテーマを切り替え"
->
-	<span class="theme-toggle__label theme-toggle__label--dark" aria-hidden="true">Dark</span>
-	<span class="theme-toggle__label theme-toggle__label--light" aria-hidden="true">Light</span>
-</button>
+<span class="site-control">
+	<button
+		type="button"
+		class="content-button theme-toggle"
+		data-theme-toggle
+		aria-label="ダークモードに切り替え"
+	>
+		<svg
+			class="theme-toggle__icon theme-toggle__icon--dark"
+			aria-hidden="true"
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+		>
+			<path d="M21 14.5A8.5 8.5 0 1 1 9.5 3 7 7 0 0 0 21 14.5z"></path>
+		</svg>
+		<svg
+			class="theme-toggle__icon theme-toggle__icon--light"
+			aria-hidden="true"
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			stroke-width="2"
+			stroke-linecap="square"
+			stroke-linejoin="miter"
+		>
+			<circle cx="12" cy="12" r="4"></circle>
+			<path
+				d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+			></path>
+		</svg>
+	</button>
+	<span class="site-control__tooltip" aria-hidden="true" data-theme-toggle-tooltip>
+		ダークモードに切り替え
+	</span>
+</span>
 
 <style>
 	.theme-toggle {
-		--theme-toggle-inset: 1.5rem; /* header p-6 と揃える */
-		box-sizing: border-box;
-		position: fixed;
-		top: var(--theme-toggle-inset);
-		right: calc(max(0px, (100vw - 1600px) / 2) + var(--theme-toggle-inset));
-		z-index: 50;
-		padding: 0.75rem 1.25rem; /* .content-button と同じ */
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 40px;
+		min-height: 40px;
+		padding: 0.35rem;
+		border: 0;
+		line-height: 0;
 	}
 
-	@media (min-width: 640px) {
-		.theme-toggle {
-			--theme-toggle-inset: 2.5rem; /* header sm:p-10 と揃える */
-		}
-	}
-
-	@media (min-width: 1024px) {
-		.theme-toggle {
-			--theme-toggle-inset: 3rem; /* header lg:p-12 と揃える */
-		}
-	}
-
-	.theme-toggle__label {
+	.theme-toggle__icon {
 		display: none;
+		flex-shrink: 0;
 	}
 
-	:global(html[data-theme='light']) .theme-toggle__label--dark,
-	:global(html[data-theme='dark']) .theme-toggle__label--light {
-		display: inline;
+	:global(html[data-theme='light']) .theme-toggle__icon--dark,
+	:global(html[data-theme='dark']) .theme-toggle__icon--light {
+		display: block;
 	}
 </style>
 
 <script>
 	const button = document.querySelector('[data-theme-toggle]');
+	const tooltip = document.querySelector('[data-theme-toggle-tooltip]');
 
 	const syncLabel = (scheme) => {
 		if (!(button instanceof HTMLButtonElement)) return;
-		button.setAttribute(
-			'aria-label',
-			scheme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え',
-		);
+		const label = scheme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え';
+		button.setAttribute('aria-label', label);
+		if (tooltip instanceof HTMLElement) tooltip.textContent = label;
 	};
 
 	if (button instanceof HTMLButtonElement && window.__colorScheme) {

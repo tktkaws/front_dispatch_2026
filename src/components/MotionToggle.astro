@@ -1,0 +1,88 @@
+---
+---
+
+<span class="site-control">
+	<button
+		type="button"
+		class="content-button motion-toggle"
+		data-motion-toggle
+		aria-label="アニメーションをオフにする"
+	>
+		<!-- 動作中 → Reduce（一時停止） -->
+		<svg
+			class="motion-toggle__icon motion-toggle__icon--reduce"
+			aria-hidden="true"
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+		>
+			<rect x="6" y="5" width="4" height="14"></rect>
+			<rect x="14" y="5" width="4" height="14"></rect>
+		</svg>
+		<!-- 停止中 → Motion（再生） -->
+		<svg
+			class="motion-toggle__icon motion-toggle__icon--motion"
+			aria-hidden="true"
+			width="20"
+			height="20"
+			viewBox="0 0 24 24"
+			fill="currentColor"
+		>
+			<path d="M7 4v16l13-8z"></path>
+		</svg>
+	</button>
+	<span class="site-control__tooltip" aria-hidden="true" data-motion-toggle-tooltip>
+		アニメーションをオフにする
+	</span>
+</span>
+
+<style>
+	.motion-toggle {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		min-width: 40px;
+		min-height: 40px;
+		padding: 0.35rem;
+		border: 0;
+		line-height: 0;
+	}
+
+	.motion-toggle__icon {
+		display: none;
+		flex-shrink: 0;
+	}
+
+	:global(html[data-motion='motion']) .motion-toggle__icon--reduce,
+	:global(html[data-motion='reduce']) .motion-toggle__icon--motion {
+		display: block;
+	}
+</style>
+
+<script>
+	const button = document.querySelector('[data-motion-toggle]');
+	const tooltip = document.querySelector('[data-motion-toggle-tooltip]');
+
+	const syncLabel = (preference) => {
+		if (!(button instanceof HTMLButtonElement)) return;
+		const label =
+			preference === 'reduce' ? 'アニメーションをオンにする' : 'アニメーションをオフにする';
+		button.setAttribute('aria-label', label);
+		if (tooltip instanceof HTMLElement) tooltip.textContent = label;
+	};
+
+	if (button instanceof HTMLButtonElement && window.__motionPreference) {
+		const { resolve, toggle } = window.__motionPreference;
+		syncLabel(resolve());
+
+		button.addEventListener('click', () => {
+			toggle();
+			syncLabel(resolve());
+		});
+
+		document.addEventListener('motion-preference-change', (event) => {
+			if (event instanceof CustomEvent) syncLabel(event.detail);
+		});
+	}
+</script>
