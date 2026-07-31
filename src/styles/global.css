@@ -119,7 +119,8 @@ main {
 .tag-link:focus-visible,
 .tag-link.current {
 	border-color: black;
-	border-width: 2px;
+	outline: 1px solid black;
+	outline-offset: 0;
 }
 
 .article-link {
