@@ -5,7 +5,9 @@ import '../styles/global.css';
 import type { ImageMetadata } from 'astro';
 import FallbackImage from '../assets/blog-placeholder-1.jpg';
 import { SITE_TITLE } from '../consts';
-import { Font } from 'astro:assets';
+import 'gen-interface-jp/400.css';
+import 'gen-interface-jp/700.css';
+import 'gen-interface-jp/display-700.css';
 
 interface Props {
 	title: string;
@@ -21,6 +23,44 @@ const { title, description, image = FallbackImage } = Astro.props;
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="color-scheme" content="light dark" />
+<script is:inline>
+	(function () {
+		const STORAGE_KEY = 'color-scheme';
+
+		function resolve() {
+			const stored = localStorage.getItem(STORAGE_KEY);
+			if (stored === 'light' || stored === 'dark') return stored;
+			return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+		}
+
+		function apply(scheme) {
+			const meta = document.querySelector('meta[name="color-scheme"]');
+			if (meta) meta.content = scheme;
+			document.documentElement.dataset.theme = scheme;
+			document.documentElement.style.colorScheme = scheme;
+			document.querySelectorAll('[data-markdown-theme]').forEach((link) => {
+				const active = link.getAttribute('data-markdown-theme') === scheme;
+				link.media = active ? 'all' : 'not all';
+				link.disabled = !active;
+			});
+			document.dispatchEvent(new CustomEvent('color-scheme-change', { detail: scheme }));
+		}
+
+		function toggle() {
+			const next = resolve() === 'dark' ? 'light' : 'dark';
+			localStorage.setItem(STORAGE_KEY, next);
+			apply(next);
+		}
+
+		window.__colorScheme = { STORAGE_KEY, resolve, apply, toggle };
+		apply(resolve());
+
+		matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+			if (!localStorage.getItem(STORAGE_KEY)) apply(resolve());
+		});
+	})();
+</script>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="icon" href="/favicon.ico" />
 <link rel="sitemap" href="/sitemap-index.xml" />
@@ -31,8 +71,6 @@ const { title, description, image = FallbackImage } = Astro.props;
 	href={new URL('rss.xml', Astro.site)}
 />
 <meta name="generator" content={Astro.generator} />
-
-<Font cssVariable="--font-atkinson" preload />
 
 <!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />

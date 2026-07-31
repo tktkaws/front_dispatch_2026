@@ -1,0 +1,39 @@
+---
+type TagItem = {
+	title: string;
+	slug: string;
+};
+
+type Props = {
+	tags: TagItem[];
+	currentSlug?: string;
+};
+
+const { tags, currentSlug } = Astro.props;
+---
+
+{
+	tags.length > 0 && (
+		<section class="w-full p-6 sm:p-10 lg:p-12 border-b border-border">
+			<h2 class="pb-4 font-display text-2xl font-bold">Tags</h2>
+			<nav aria-label="Tags">
+				<ul class="m-0 flex list-none flex-row flex-wrap gap-2 p-0 text-sm">
+					{tags.map((tag) => {
+						const isCurrent = currentSlug === tag.slug;
+						return (
+							<li>
+								<a
+									href={`/tags/${tag.slug}/`}
+									class:list={['tag-link', { current: isCurrent }]}
+									aria-current={isCurrent ? 'page' : undefined}
+								>
+									{tag.title}
+								</a>
+							</li>
+						);
+					})}
+				</ul>
+			</nav>
+		</section>
+	)
+}

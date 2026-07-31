@@ -15,8 +15,13 @@
     "@astrojs/mdx": "^7.0.4",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
+    "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.1.4",
+    "gen-interface-jp": "^0.8.0",
+    "github-markdown-css": "^5.9.0",
     "microcms-js-sdk": "^3.4.0",
-    "sharp": "^0.35.0"
+    "sharp": "^0.35.0",
+    "shiki": "^4.3.1",
+    "tailwindcss": "^4.3.3"
   }
 }

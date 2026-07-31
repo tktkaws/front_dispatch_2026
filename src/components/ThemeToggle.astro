@@ -1,0 +1,71 @@
+---
+---
+
+<button
+	type="button"
+	class="content-button theme-toggle"
+	data-theme-toggle
+	aria-label="カラーテーマを切り替え"
+>
+	<span class="theme-toggle__label theme-toggle__label--dark" aria-hidden="true">Dark</span>
+	<span class="theme-toggle__label theme-toggle__label--light" aria-hidden="true">Light</span>
+</button>
+
+<style>
+	.theme-toggle {
+		--theme-toggle-inset: 1.5rem; /* header p-6 と揃える */
+		box-sizing: border-box;
+		position: fixed;
+		top: var(--theme-toggle-inset);
+		right: calc(max(0px, (100vw - 1600px) / 2) + var(--theme-toggle-inset));
+		z-index: 50;
+		padding: 0.75rem 1.25rem; /* .content-button と同じ */
+	}
+
+	@media (min-width: 640px) {
+		.theme-toggle {
+			--theme-toggle-inset: 2.5rem; /* header sm:p-10 と揃える */
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.theme-toggle {
+			--theme-toggle-inset: 3rem; /* header lg:p-12 と揃える */
+		}
+	}
+
+	.theme-toggle__label {
+		display: none;
+	}
+
+	:global(html[data-theme='light']) .theme-toggle__label--dark,
+	:global(html[data-theme='dark']) .theme-toggle__label--light {
+		display: inline;
+	}
+</style>
+
+<script>
+	const button = document.querySelector('[data-theme-toggle]');
+
+	const syncLabel = (scheme) => {
+		if (!(button instanceof HTMLButtonElement)) return;
+		button.setAttribute(
+			'aria-label',
+			scheme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え',
+		);
+	};
+
+	if (button instanceof HTMLButtonElement && window.__colorScheme) {
+		const { resolve, toggle } = window.__colorScheme;
+		syncLabel(resolve());
+
+		button.addEventListener('click', () => {
+			toggle();
+			syncLabel(resolve());
+		});
+
+		document.addEventListener('color-scheme-change', (event) => {
+			if (event instanceof CustomEvent) syncLabel(event.detail);
+		});
+	}
+</script>

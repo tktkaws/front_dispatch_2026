@@ -1,7 +1,11 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 import BlogPost from '../../layouts/BlogPost.astro';
-import { plainTextExcerpt } from '../../lib/microcms';
+import {
+	highlightCodeBlocks,
+	plainTextExcerpt,
+	withHeadingIds,
+} from '../../lib/microcms';
 
 export async function getStaticPaths() {
 	const posts = await getCollection('blogs');
@@ -14,12 +18,32 @@ export async function getStaticPaths() {
 type Props = CollectionEntry<'blogs'>;
 
 const post = Astro.props;
+const { html: htmlWithIds, headings } = withHeadingIds(post.data.body);
+const html = await highlightCodeBlocks(htmlWithIds);
 const description = plainTextExcerpt(post.data.body);
 const pubDate = new Date(post.data.publishedAt);
 const updatedDate =
 	post.data.revisedAt !== post.data.publishedAt
 		? new Date(post.data.revisedAt)
 		: undefined;
+
+const byNewest = (a: CollectionEntry<'blogs'>, b: CollectionEntry<'blogs'>) =>
+	new Date(b.data.publishedAt).valueOf() - new Date(a.data.publishedAt).valueOf();
+
+const allPosts = await getCollection('blogs');
+const others = allPosts.filter((p) => p.id !== post.id);
+const tagSlugs = new Set(post.data.tags.map((tag) => tag.slug));
+
+const taggedRelated = others
+	.filter((p) => p.data.tags.some((tag) => tagSlugs.has(tag.slug)))
+	.sort(byNewest)
+	.slice(0, 5);
+
+const isRelatedByTags = taggedRelated.length >= 2;
+const relatedPosts = isRelatedByTags
+	? taggedRelated
+	: [...others].sort(byNewest).slice(0, 5);
+const relatedHeading = isRelatedByTags ? 'Related Articles' : 'Latest Articles';
 ---
 
 <BlogPost
@@ -28,6 +52,14 @@ const updatedDate =
 	pubDate={pubDate}
 	updatedDate={updatedDate}
 	tags={post.data.tags}
+	headings={headings}
+	relatedHeading={relatedHeading}
+	relatedPosts={relatedPosts.map((p) => ({
+		id: p.id,
+		title: p.data.title,
+		publishedAt: p.data.publishedAt,
+		tags: p.data.tags.map((tag) => ({ title: tag.title, slug: tag.slug })),
+	}))}
 >
-	<div set:html={post.data.body} />
+	<div set:html={html} />
 </BlogPost>

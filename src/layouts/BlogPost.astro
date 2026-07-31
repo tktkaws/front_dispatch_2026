@@ -1,14 +1,25 @@
 ---
 import type { ImageMetadata } from 'astro';
-import { Image } from 'astro:assets';
+import markdownDark from 'github-markdown-css/github-markdown-dark.css?url';
+import markdownLight from 'github-markdown-css/github-markdown-light.css?url';
+import ArticlesList from '../components/ArticlesList.astro';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import type { Heading } from '../lib/microcms';
 
 interface Tag {
 	title: string;
 	slug: string;
+}
+
+interface RelatedPost {
+	id: string;
+	title: string;
+	publishedAt: string;
+	tags: Tag[];
 }
 
 type Props = {
@@ -18,103 +29,431 @@ type Props = {
 	updatedDate?: Date;
 	heroImage?: ImageMetadata;
 	tags?: Tag[];
+	headings?: Heading[];
+	relatedHeading?: string;
+	relatedPosts?: RelatedPost[];
 };
 
-const { title, description, pubDate, updatedDate, heroImage, tags = [] } = Astro.props;
+const {
+	title,
+	description,
+	pubDate,
+	updatedDate,
+	heroImage,
+	tags = [],
+	headings = [],
+	relatedHeading = 'Related Articles',
+	relatedPosts = [],
+} = Astro.props;
+
+const displayDate =
+	updatedDate && updatedDate > pubDate ? updatedDate : pubDate;
 ---
 
 <html lang="ja">
 	<head>
 		<BaseHead title={title} description={description} image={heroImage} />
-		<style>
-			main {
-				width: calc(100% - 2em);
-				max-width: 100%;
-				margin: 0;
-			}
-			.hero-image {
-				width: 100%;
-			}
-			.hero-image img {
-				display: block;
-				margin: 0 auto;
-				border-radius: 12px;
-				box-shadow: var(--box-shadow);
-			}
-			.prose {
-				width: 720px;
-				max-width: calc(100% - 2em);
-				margin: auto;
-				padding: 1em;
-				color: rgb(var(--gray-dark));
-			}
-			.title {
-				margin-bottom: 1em;
-				padding: 1em 0;
-				text-align: center;
-				line-height: 1;
-			}
-			.title h1 {
-				margin: 0 0 0.5em 0;
-			}
-			.date {
-				margin-bottom: 0.5em;
-				color: rgb(var(--gray));
-			}
-			.last-updated-on {
-				font-style: italic;
-			}
-			.tags {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 0.5rem;
-				justify-content: center;
-				margin: 0.75em 0 0;
-				padding: 0;
-				list-style: none;
-			}
-			.tags li {
-				color: rgb(var(--gray));
-				font-size: 0.875rem;
-			}
-		</style>
+		<link
+			rel="stylesheet"
+			href={markdownLight}
+			data-markdown-theme="light"
+			media="(prefers-color-scheme: light)"
+		/>
+		<link
+			rel="stylesheet"
+			href={markdownDark}
+			data-markdown-theme="dark"
+			media="(prefers-color-scheme: dark)"
+		/>
+		<script is:inline>
+			window.__colorScheme?.apply(window.__colorScheme.resolve());
+		</script>
 	</head>
 
 	<body>
 		<Header />
 		<main>
-			<article>
-				<div class="hero-image">
-					{heroImage && <Image width={1020} height={510} src={heroImage} alt="" />}
-				</div>
-				<div class="prose">
-					<div class="title">
-						<div class="date">
-							<FormattedDate date={pubDate} />
-							{
-								updatedDate && (
-									<div class="last-updated-on">
-										Last updated on <FormattedDate date={updatedDate} />
-									</div>
-								)
-							}
-						</div>
-						<h1>{title}</h1>
+			<article data-article>
+				<header class="article-header border-b border-border">
+					<h1 class="p-6 sm:p-10 lg:p-12 font-display text-3xl font-bold leading-tight text-ink md:text-4xl">
+						{title}
+					</h1>
+
+					<div class="px-6 sm:px-10 lg:px-12 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-sm">
+						<FormattedDate date={displayDate} />
 						{
 							tags.length > 0 && (
-								<ul class="tags">
+								<ul class="m-0 flex list-none flex-wrap gap-2 p-0">
 									{tags.map((tag) => (
-										<li>#{tag.title}</li>
+										<li>
+											<a href={`/tags/${tag.slug}/`} class="tag-link">
+												{tag.title}
+											</a>
+										</li>
 									))}
 								</ul>
 							)
 						}
-						<hr />
 					</div>
+					{
+						headings.length > 0 && (
+							<div class="p-6 sm:p-10 lg:p-12 mt-8 border-t border-border-muted pt-8">
+								<TableOfContents headings={headings} />
+							</div>
+						)
+					}
+				</header>
+				<div class="markdown-body p-6 sm:p-10 lg:p-12">
 					<slot />
 				</div>
+
+				<div class="article-menu" data-article-menu>
+					<div class="article-menu__panel" id="article-menu-panel">
+						<header class="article-menu__header">
+							<h1 class="p-6 pb-0 font-display text-xl font-bold leading-tight text-ink md:text-2xl">
+								{title}
+							</h1>
+
+							<div class="px-6 mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2">
+								<FormattedDate date={displayDate} />
+								{
+									tags.length > 0 && (
+										<ul class="m-0 flex list-none flex-wrap gap-2 p-0">
+											{tags.map((tag) => (
+												<li>
+													<a href={`/tags/${tag.slug}/`} class="tag-link">
+														{tag.title}
+													</a>
+												</li>
+											))}
+										</ul>
+									)
+								}
+							</div>
+							{
+								headings.length > 0 && (
+									<div class="p-6 mt-6 border-t border-border-muted pt-6">
+										<TableOfContents headings={headings} headingId="article-menu-toc-heading" />
+									</div>
+								)
+							}
+						</header>
+					</div>
+					<button
+						type="button"
+						class="content-button article-menu__trigger"
+						aria-controls="article-menu-panel"
+						aria-expanded="false"
+						data-article-menu-trigger
+					>
+						Contents
+					</button>
+				</div>
 			</article>
+			{
+				relatedPosts.length > 0 && (
+					<ArticlesList
+						posts={relatedPosts}
+						heading={relatedHeading}
+						class="border-t border-border"
+					/>
+				)
+			}
 		</main>
 		<Footer />
 	</body>
 </html>
+
+<style>
+	article {
+		/* content-button: padding 0.75rem×2 + font-size 0.875rem × line-height 1.2 + border 2px */
+		--content-button-height: calc(1.5rem + 0.875rem * 1.2 + 2px);
+		--article-menu-inset: 1.5rem; /* p-6 と揃える */
+		position: relative;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		/* ボタン高さ + bottom inset の 2 倍（被り防止） */
+		padding-bottom: calc(var(--content-button-height) + var(--article-menu-inset) * 2);
+	}
+
+	@media (min-width: 640px) {
+		article {
+			--article-menu-inset: 2.5rem; /* sm:p-10 と揃える */
+		}
+	}
+
+	@media (min-width: 1024px) {
+		article {
+			--article-menu-inset: 3rem; /* lg:p-12 と揃える */
+		}
+	}
+
+	.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		font-family: var(--font-sans);
+		flex: 1;
+	}
+	:global(.markdown-body :is(h1, h2, h3, h4, h5, h6)) {
+		font-family: var(--font-display);
+		/* body の font-size-adjust: from-font が Display に効いてサイズが変わるのを防ぐ */
+		font-size-adjust: none;
+		text-wrap: balance;
+		border-bottom: 0;
+		padding-bottom: 0;
+		border: none;
+		scroll-margin-top: 2rem;
+	}
+	:global(.markdown-body h1) {
+		font-size: 2rem;
+	}
+	:global(.markdown-body h2) {
+		font-size: 1.5rem;
+		margin-top: 4rem; /* github-markdown-css 既定 24px の 2 倍 */
+		position: relative;
+		padding-left: 1rem;
+	}
+	:global(.markdown-body h2::before) {
+		content: '';
+		position: absolute;
+		top: 0.15em;
+		bottom: 0.15em;
+		left: 0;
+		width: 0.25rem;
+		background: black;
+	}
+	:global(.markdown-body h3) {
+		font-size: 1.25rem;
+		scroll-margin-top: 1.5rem; /* margin-top と同じ */
+	}
+	:global(.markdown-body h4) {
+		font-size: 1rem;
+	}
+	:global(.markdown-body h5) {
+		font-size: 0.875rem;
+	}
+	:global(.markdown-body h6) {
+		font-size: 0.85rem;
+	}
+	:global(.markdown-body :is(p, blockquote, li)) {
+		text-wrap: pretty;
+	}
+	:global(.markdown-body blockquote) {
+		color: var(--color-muted);
+		border-left: 0.1875em solid #cccccc;
+	}
+	:global(.markdown-body blockquote > *) {
+		margin-left: 1rem;
+	}
+	/* 目次と同じ "-" リスト */
+	:global(.markdown-body ul:not(.contains-task-list)) {
+		list-style: none;
+		padding-left: 0;
+	}
+	:global(.markdown-body ul:not(.contains-task-list) > li) {
+		padding-left: 1.25em;
+	}
+	:global(.markdown-body ul:not(.contains-task-list) > li::before) {
+		content: '- ';
+		margin-left: -1.25em;
+	}
+	:global(.markdown-body .shiki) {
+		padding: 1rem 1.25rem;
+		overflow-x: auto;
+		border: 1px solid var(--color-border-muted);
+	}
+	:global(.markdown-body .shiki code) {
+		padding: 0;
+		background: transparent;
+		font-size: 0.875em;
+	}
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
+
+	.article-menu {
+		position: fixed;
+		right: calc(max(0px, (100vw - 1600px) / 2) + var(--article-menu-inset));
+		bottom: var(--article-menu-inset);
+		z-index: 40;
+		display: none;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 0.5rem;
+		opacity: 0;
+		transition:
+			display 0.35s,
+			opacity 0.35s ease;
+		transition-behavior: allow-discrete;
+	}
+
+	.article-menu.is-visible {
+		display: flex;
+		opacity: 1;
+
+		@starting-style {
+			opacity: 0;
+		}
+	}
+
+	.article-menu.is-docked {
+		position: absolute;
+		right: var(--article-menu-inset);
+		bottom: var(--article-menu-inset);
+	}
+
+	/* 開いているときはテーマ切替（z-index: 50）より前面 */
+	.article-menu.is-open {
+		z-index: 60;
+	}
+
+	.article-menu.is-open .article-menu__trigger {
+		background: var(--color-ink);
+		color: var(--color-page);
+	}
+
+	.article-menu__panel {
+		display: none;
+		width: min(calc(100vw - (2 * var(--article-menu-inset))), 26rem);
+		/* 上余白 + ボタン高さ + gap を除いた表示可能高さ */
+		max-height: calc(
+			100dvh - var(--article-menu-inset) * 2 - var(--content-button-height) - 0.5rem
+		);
+		overflow-x: hidden;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		border: 1px solid var(--color-border);
+		background: var(--color-page);
+		opacity: 0;
+		translate: 0 0.5rem;
+		transition:
+			display 0.3s,
+			opacity 0.3s ease,
+			translate 0.3s ease;
+		transition-behavior: allow-discrete;
+	}
+
+	.article-menu.is-open .article-menu__panel {
+		display: block;
+		opacity: 1;
+		translate: 0 0;
+
+		@starting-style {
+			opacity: 0;
+			translate: 0 0.5rem;
+		}
+	}
+
+	.article-menu__header :global(.toc-title) {
+		font-size: 1rem;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.article-menu,
+		.article-menu__panel {
+			transition-duration: 0.1s;
+		}
+
+		.article-menu__panel {
+			translate: none;
+		}
+
+		.article-menu.is-open .article-menu__panel {
+			@starting-style {
+				translate: none;
+			}
+		}
+	}
+</style>
+
+<script>
+	const article = document.querySelector('[data-article]');
+	const menu = document.querySelector('[data-article-menu]');
+	const panel = document.querySelector('#article-menu-panel');
+	const header = document.querySelector('.article-header');
+	const trigger = document.querySelector('[data-article-menu-trigger]');
+
+	if (
+		article instanceof HTMLElement &&
+		menu instanceof HTMLElement &&
+		panel instanceof HTMLElement &&
+		header instanceof HTMLElement &&
+		trigger instanceof HTMLElement
+	) {
+		const getInset = () => {
+			const rem =
+				parseFloat(getComputedStyle(menu).getPropertyValue('--article-menu-inset')) || 1.5;
+			return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+		};
+		let headerGone = false;
+
+		const setExpanded = () => {
+			trigger.setAttribute('aria-expanded', String(menu.classList.contains('is-open')));
+		};
+
+		const openMenu = () => {
+			menu.classList.add('is-open');
+			setExpanded();
+		};
+
+		const closeMenu = () => {
+			menu.classList.remove('is-open');
+			setExpanded();
+		};
+
+		const toggleMenu = () => {
+			if (menu.classList.contains('is-open')) {
+				closeMenu();
+			} else {
+				openMenu();
+			}
+		};
+
+		const syncMenu = () => {
+			const articleBottom = article.getBoundingClientRect().bottom;
+			const docked = articleBottom <= window.innerHeight - getInset();
+			menu.classList.toggle('is-docked', docked);
+			menu.classList.toggle('is-visible', headerGone);
+			if (!headerGone) {
+				closeMenu();
+			}
+			setExpanded();
+		};
+
+		const headerObserver = new IntersectionObserver(
+			([entry]) => {
+				headerGone = !entry.isIntersecting;
+				syncMenu();
+			},
+			{ threshold: 0 },
+		);
+
+		headerObserver.observe(header);
+
+		window.addEventListener('scroll', syncMenu, { passive: true });
+		window.addEventListener('resize', syncMenu);
+		syncMenu();
+
+		trigger.addEventListener('click', () => {
+			toggleMenu();
+		});
+
+		/* コンテンツボタン・パネル以外のクリック／タッチで閉じる */
+		document.addEventListener('pointerdown', (event) => {
+			if (!(event.target instanceof Node)) return;
+			if (trigger.contains(event.target) || panel.contains(event.target)) return;
+			closeMenu();
+		});
+
+		menu.addEventListener('click', (event) => {
+			if (!(event.target instanceof Element)) return;
+			if (event.target.closest('a[href^="#"]')) {
+				closeMenu();
+			}
+		});
+	}
+</script>
