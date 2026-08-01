@@ -173,5 +173,5 @@ swup は「Astro の出力を壊さずに、遷移体験だけを足す」ため
 ### 次の一歩
 
 - [swup の Hooks / Visit](https://swup.js.org/lifecycle/hooks/) で遷移中のスクロールやアナリティクス送信を制御する
-- Fragment プラグインでページ全体ではなく一部ブロックだけを更新する
+- [Fragment Plugin でタグ一覧だけを差し替える](./astro-swup-fragment-plugin.md)
 - Astro View Transitions との使い分け（併用は避け、どちらかに寄せる）をチームで決める
