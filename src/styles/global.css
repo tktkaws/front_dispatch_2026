@@ -77,6 +77,16 @@ html[data-motion='reduce'] {
 	transition-timing-function: ease-in;
 	transition-duration: 150ms;
 }
+#articles.is-home-stagger:not(.is-home-stagger-active) .article-item {
+	opacity: 0;
+	transition: none;
+}
+#articles.is-home-stagger.is-home-stagger-active .article-item {
+	opacity: 1;
+	transition-property: opacity;
+	transition-duration: 400ms;
+	transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
 html[data-motion='reduce'] #articles.is-changing,
 html[data-motion='reduce'] #articles .article-item {
 	transition-duration: 0.01ms;
