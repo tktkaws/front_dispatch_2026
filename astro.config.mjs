@@ -20,6 +20,16 @@ export default defineConfig({
 			containers: ['main', 'header'],
 			globalInstance: true,
 			theme: 'fade',
+			fragments: [
+				{
+					from: ['/', '/tags/:slug', '/tags/:slug/'],
+					to: ['/', '/tags/:slug', '/tags/:slug/'],
+					containers: ['#articles'],
+					name: 'tag-filter',
+					// Keep focus on the activated tag link (a11y plugin would otherwise move it to body)
+					focus: false,
+				},
+			],
 		}),
 	],
 	markdown: {

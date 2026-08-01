@@ -21,7 +21,7 @@ type Props = {
 const { posts, heading = 'Articles', emptyMessage, class: className } = Astro.props;
 ---
 
-<section class:list={['articles', className]}>
+<section id="articles" class:list={['articles', className]}>
 	<h2
 		class="p-6 sm:p-10 lg:p-12 pb-3 sm:pb-5 lg:pb-6 font-display text-2xl font-bold border-b border-border-muted"
 	>
@@ -30,8 +30,11 @@ const { posts, heading = 'Articles', emptyMessage, class: className } = Astro.pr
 	<ul class="pb-6 sm:pb-10 lg:pb-12">
 		{
 			posts.length > 0 ? (
-				posts.map((post) => (
-					<li class="border-b border-border-muted">
+				posts.map((post, index) => (
+					<li
+						class="article-item border-b border-border-muted"
+						style={`transition-delay: ${index * 0.1}s`}
+					>
 						<a
 							href={`/blog/${post.id}/`}
 							class="article-link grid grid-cols-2 gap-x-[2%] gap-y-2 items-start px-6 sm:px-10 lg:px-12 py-4 md:grid-cols-[60%_18%_18%] md:items-center md:gap-y-0"
@@ -55,7 +58,7 @@ const { posts, heading = 'Articles', emptyMessage, class: className } = Astro.pr
 					</li>
 				))
 			) : emptyMessage ? (
-				<li class="px-6 sm:px-10 lg:px-12 py-8 text-sm">{emptyMessage}</li>
+				<li class="article-item px-6 sm:px-10 lg:px-12 py-8 text-sm">{emptyMessage}</li>
 			) : null
 		}
 	</ul>

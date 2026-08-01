@@ -55,6 +55,33 @@ html[data-motion='reduce'] {
 	--swup-fade-theme-duration: 0s;
 }
 
+
+#articles.is-changing {
+	--duration-leave: 150ms;
+	--duration-enter: 400ms;
+	transition-duration: var(--duration-enter);
+}
+#articles.is-leaving {
+	transition-duration: var(--duration-leave);
+}
+/* Keep transition on items so stagger delays survive after swup removes is-changing */
+#articles .article-item {
+	transition-property: opacity;
+	transition-duration: 400ms;
+	transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+#articles.is-animating .article-item {
+	opacity: 0;
+}
+#articles.is-leaving .article-item {
+	transition-timing-function: ease-in;
+	transition-duration: 150ms;
+}
+html[data-motion='reduce'] #articles.is-changing,
+html[data-motion='reduce'] #articles .article-item {
+	transition-duration: 0.01ms;
+}
+
 body {
 	font-family: var(--font-sans);
 	font-size-adjust: from-font;
