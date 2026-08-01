@@ -83,6 +83,7 @@ html[data-motion='reduce'] #articles .article-item {
 }
 
 body {
+	position: relative;
 	font-family: var(--font-sans);
 	font-size-adjust: from-font;
 	margin: 0;
@@ -98,19 +99,30 @@ body {
 	color: var(--color-ink);
 }
 
+/* Persistent column rails — outside swup containers so they survive page fades */
+.site-frame {
+	position: absolute;
+	inset: 0 auto;
+	left: 50%;
+	translate: -50% 0;
+	width: min(100%, 1600px);
+	border-left: 1px solid var(--color-border);
+	border-right: 1px solid var(--color-border);
+	pointer-events: none;
+	z-index: 1;
+}
+@media screen and (max-width: 1600px) {
+	.site-frame {
+		border: 0;
+	}
+}
+
 main {
 	width: min(100%, 1600px);
 	margin: 0 auto;
-	border-left: 1px solid var(--color-border);
-	border-right: 1px solid var(--color-border);
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-}
-@media screen and (max-width: 1600px) {
-	main {
-	border: 0px solid var(--color-border);
-}
 }
 
 .sr-only {
