@@ -55,7 +55,6 @@ html[data-motion='reduce'] {
 	--swup-fade-theme-duration: 0s;
 }
 
-
 #articles.is-changing {
 	--duration-leave: 150ms;
 	--duration-enter: 400ms;
