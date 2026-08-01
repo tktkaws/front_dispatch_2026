@@ -20,8 +20,7 @@ const today = new Date();
 		width: min(100%, 1600px);
 		margin: 0 auto;
 		background: var(--color-page);
-		border: 1px solid var(--color-border);
-		border-bottom: none;
+		border-top: 1px solid var(--color-border);
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
@@ -32,12 +31,6 @@ const today = new Date();
 		text-decoration: none;
 		/* padding-bottom: 0.5rem; */
 		border-bottom: 1px solid black;
-	}
-	@media screen and (max-width: 1600px) {
-		footer {
-			border-left: 0px solid var(--color-border);
-			border-right: 0px solid var(--color-border);
-		}
 	}
 	@media screen and (max-width: 767px) {
 		footer {

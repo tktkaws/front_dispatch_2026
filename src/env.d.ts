@@ -18,12 +18,20 @@ interface MotionPreferenceController {
 	prefersReduced: () => boolean;
 }
 
+interface SwupVisit {
+	fragmentVisit?: unknown;
+	animation: { animate: boolean };
+	to?: { url?: string };
+}
+
 interface Window {
 	__colorScheme?: ColorSchemeController;
 	__motionPreference?: MotionPreferenceController;
+	__homeArticlesStaggerBound?: boolean;
 	swup?: {
+		visit?: SwupVisit;
 		hooks: {
-			on: (hook: string, handler: (visit: { animation: { animate: boolean } }) => void) => void;
+			on: (hook: string, handler: (visit: SwupVisit) => void) => void;
 		};
 	};
 }
