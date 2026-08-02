@@ -211,4 +211,5 @@ swup の差し替え対象外に `.site-frame` を置き、絶対配置の左右
 
 - [Fragment Plugin（公式）](https://swup.js.org/plugins/fragment-plugin/)
 - [Astro 向け swup 導入メモ](./astro-swup-page-transitions.md)
+- [Accessibility Plugin で読み上げとフォーカスを整える](./astro-swup-a11y-plugin.md)
 - [Fragment デモ: Characters](https://swup-fragment-plugin.netlify.app/characters/)
