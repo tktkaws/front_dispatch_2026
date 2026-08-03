@@ -152,11 +152,37 @@ main {
 	white-space: nowrap;
 }
 
+/* Header / footer / article body text links */
+header a,
+footer a,
+.markdown-body a:not(.tag-link),
+.toc a {
+	padding-inline: 0.35em;
+	border-radius: 0;
+	outline: none;
+}
+
+header a:hover,
+header a:focus-visible,
+footer a:hover,
+footer a:focus-visible,
+.markdown-body a:not(.tag-link):hover,
+.markdown-body a:not(.tag-link):focus-visible,
+.toc a:hover,
+.toc a:focus-visible {
+	outline: 2px solid var(--color-border);
+	outline-offset: 0;
+}
+
 .tag-link,
 .article-link {
 	color: inherit;
 	text-decoration: none;
 	outline: none;
+}
+
+.article-link {
+	border-radius: 0;
 }
 
 .tag,
@@ -170,18 +196,15 @@ main {
 .tag-link:hover,
 .tag-link:focus-visible,
 .tag-link.current {
-	border-color: black;
-	outline: 1px solid black;
+	border-color: var(--color-border);
+	outline: 2px solid var(--color-border);
 	outline-offset: 0;
-}
-
-.article-link {
-	border: 3px solid transparent;
 }
 
 .article-link:hover,
 .article-link:focus-visible {
-	border-color: var(--color-border);
+	outline: 2px solid var(--color-border);
+	outline-offset: 0;
 }
 
 .content-button {

@@ -86,7 +86,7 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 	}
 
 	.site-controls :global(.site-control:hover .site-control__tooltip),
-	.site-controls :global(.site-control:focus-within .site-control__tooltip) {
+	.site-controls :global(.site-control:has(:focus-visible) .site-control__tooltip) {
 		opacity: 1;
 		visibility: visible;
 		translate: 0 0;
