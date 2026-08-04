@@ -6,29 +6,31 @@ import ThemeToggle from './ThemeToggle.astro';
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 ---
 
-{
-	isHome ? (
-		<header class="p-6 sm:p-10 lg:p-12">
+<header class="p-6 sm:p-10 lg:p-12">
+	{
+		isHome ? (
 			<h1 class="font-display text-lg sm:text-3xl lg:text-4xl font-bold">
 				<a href="/">{SITE_TITLE}</a>
 			</h1>
-		</header>
-	) : (
-		<header class="global-header p-6 sm:p-10 lg:p-12">
+		) : (
 			<a href="/" class="w-fit font-display text-lg sm:text-3xl lg:text-4xl font-bold">
 				{SITE_TITLE}
 			</a>
-		</header>
-	)
-}
+		)
+	}
+	<div class="site-controls">
+		<MotionToggle />
+		<ThemeToggle />
+	</div>
+</header>
 <div class="site-frame" aria-hidden="true"></div>
-<div class="site-controls">
-	<MotionToggle />
-	<ThemeToggle />
-</div>
 
 <style>
 	header {
+		display: flex;
+		align-items: flex-start;
+		justify-content: space-between;
+		gap: 1rem;
 		width: min(100%, 1600px);
 		margin: 0 auto;
 		border-bottom: 1px solid var(--color-border);
@@ -40,15 +42,11 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 	}
 
 	.site-controls {
-		--site-controls-inset: 1.5rem; /* header p-6 と揃える */
 		box-sizing: border-box;
-		position: fixed;
-		top: var(--site-controls-inset);
-		right: calc(max(0px, (100vw - 1600px) / 2) + var(--site-controls-inset));
-		z-index: 50;
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: flex-end;
+		flex-shrink: 0;
 		gap: 0.5rem;
 	}
 
@@ -64,7 +62,7 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 		z-index: 1;
 		box-sizing: border-box;
 		width: max-content;
-		max-width: min(16rem, calc(100vw - 2 * var(--site-controls-inset)));
+		max-width: min(16rem, calc(100vw - 3rem));
 		padding: 0.4rem 0.6rem;
 		border: 1px solid var(--color-border);
 		background: var(--color-page);
@@ -95,17 +93,5 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 	:global(html[data-motion='reduce']) .site-controls :global(.site-control__tooltip) {
 		transition-duration: 0.01ms;
 		translate: none;
-	}
-
-	@media (min-width: 640px) {
-		.site-controls {
-			--site-controls-inset: 2.5rem; /* header sm:p-10 と揃える */
-		}
-	}
-
-	@media (min-width: 1024px) {
-		.site-controls {
-			--site-controls-inset: 3rem; /* header lg:p-12 と揃える */
-		}
 	}
 </style>

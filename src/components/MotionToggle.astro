@@ -60,10 +60,9 @@
 </style>
 
 <script>
-	const button = document.querySelector('[data-motion-toggle]');
-	const tooltip = document.querySelector('[data-motion-toggle-tooltip]');
-
-	const syncLabel = (preference) => {
+	const syncLabel = (preference: MotionPreference) => {
+		const button = document.querySelector('[data-motion-toggle]');
+		const tooltip = document.querySelector('[data-motion-toggle-tooltip]');
 		if (!(button instanceof HTMLButtonElement)) return;
 		const label =
 			preference === 'reduce' ? 'アニメーションをオンにする' : 'アニメーションをオフにする';
@@ -71,17 +70,54 @@
 		if (tooltip instanceof HTMLElement) tooltip.textContent = label;
 	};
 
-	if (button instanceof HTMLButtonElement && window.__motionPreference) {
+	function whenSwupReady(callback: (swup: NonNullable<Window['swup']>) => void) {
+		if (window.swup) {
+			callback(window.swup);
+			return;
+		}
+
+		const tryBind = () => {
+			if (!window.swup) return false;
+			observer.disconnect();
+			clearInterval(pollId);
+			callback(window.swup);
+			return true;
+		};
+
+		const observer = new MutationObserver(() => {
+			tryBind();
+		});
+		observer.observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+
+		const pollId = window.setInterval(() => {
+			tryBind();
+		}, 50);
+	}
+
+	if (window.__motionPreference) {
 		const { resolve, toggle } = window.__motionPreference;
 		syncLabel(resolve());
 
-		button.addEventListener('click', () => {
+		// Delegate so handlers survive swup replacing <header>
+		document.addEventListener('click', (event) => {
+			const target = event.target;
+			if (!(target instanceof Element)) return;
+			if (!target.closest('[data-motion-toggle]')) return;
 			toggle();
 			syncLabel(resolve());
 		});
 
 		document.addEventListener('motion-preference-change', (event) => {
 			if (event instanceof CustomEvent) syncLabel(event.detail);
+		});
+
+		whenSwupReady((swup) => {
+			swup.hooks.on('page:view', () => {
+				syncLabel(resolve());
+			});
 		});
 	}
 </script>
