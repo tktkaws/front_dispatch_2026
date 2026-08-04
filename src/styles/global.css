@@ -162,6 +162,12 @@ footer a,
 	outline: none;
 }
 
+/* Optically align header/footer link text with the section padding edge */
+header a,
+footer a {
+	margin-inline-start: -0.35em;
+}
+
 header a:hover,
 header a:focus-visible,
 footer a:hover,
