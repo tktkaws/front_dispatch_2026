@@ -176,6 +176,13 @@ footer a:focus-visible,
 .markdown-body a:not(.tag-link):focus-visible,
 .toc a:hover,
 .toc a:focus-visible {
+	background: var(--color-surface);
+}
+
+header a:focus-visible,
+footer a:focus-visible,
+.markdown-body a:not(.tag-link):focus-visible,
+.toc a:focus-visible {
 	outline: 2px solid var(--color-border);
 	outline-offset: 0;
 }
@@ -203,14 +210,22 @@ footer a:focus-visible,
 .tag-link:focus-visible,
 .tag-link.current {
 	border-color: var(--color-border);
+	background: var(--color-surface);
+}
+
+.tag-link:focus-visible {
+	outline: 1px solid var(--color-border);
+	outline-offset: 0;
+}
+
+.article-link:focus-visible {
 	outline: 2px solid var(--color-border);
 	outline-offset: 0;
 }
 
 .article-link:hover,
 .article-link:focus-visible {
-	outline: 2px solid var(--color-border);
-	outline-offset: 0;
+	background: var(--color-surface);
 }
 
 .content-button {
@@ -235,9 +250,14 @@ footer a:focus-visible,
 
 .content-button:hover,
 .content-button:focus-visible {
-	border-color: #000;
-	background: #fff;
-	color: #000;
+	border-color: var(--color-border);
+	background: var(--color-surface);
+	color: var(--color-ink);
+}
+
+.content-button:focus-visible {
+	outline: 1px solid var(--color-border);
+	outline-offset: 0;
 }
 
 html[data-theme='dark'] .shiki,
