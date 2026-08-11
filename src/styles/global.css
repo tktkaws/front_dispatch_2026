@@ -235,10 +235,10 @@ footer a:focus-visible,
 	min-width: 0;
 	margin: 0;
 	padding: 0.75rem 1.25rem;
-	border: 1px solid #000;
+	border: 1px solid light-dark(#000, #fff);
 	border-radius: 0;
-	background: #000;
-	color: #fff;
+	background: light-dark(#000, #fff);
+	color: light-dark(#fff, #000);
 	font-family: var(--font-display);
 	font-size: 0.875rem;
 	font-weight: 700;
@@ -250,9 +250,9 @@ footer a:focus-visible,
 
 .content-button:hover,
 .content-button:focus-visible {
-	border-color: var(--color-border);
-	background: var(--color-surface);
-	color: var(--color-ink);
+	border-color: light-dark(#000, #fff);
+	background: light-dark(#fff, #000);
+	color: light-dark(#000, #fff);
 }
 
 .content-button:focus-visible {
