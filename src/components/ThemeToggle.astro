@@ -6,7 +6,7 @@
 		type="button"
 		class="content-button theme-toggle"
 		data-theme-toggle
-		aria-label="ダークモードに切り替え"
+		aria-label="ダークモードに切り替える"
 	>
 		<svg
 			class="theme-toggle__icon theme-toggle__icon--dark"
@@ -37,7 +37,7 @@
 		</svg>
 	</button>
 	<span class="site-control__tooltip" aria-hidden="true" data-theme-toggle-tooltip>
-		ダークモードに切り替え
+		ダークモードに切り替える
 	</span>
 </span>
 
@@ -68,7 +68,7 @@
 		const button = document.querySelector('[data-theme-toggle]');
 		const tooltip = document.querySelector('[data-theme-toggle-tooltip]');
 		if (!(button instanceof HTMLButtonElement)) return;
-		const label = scheme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え';
+		const label = scheme === 'dark' ? 'ライトモードに切り替える' : 'ダークモードに切り替える';
 		button.setAttribute('aria-label', label);
 		if (tooltip instanceof HTMLElement) tooltip.textContent = label;
 	};

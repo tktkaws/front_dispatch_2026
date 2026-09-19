@@ -250,8 +250,8 @@ footer a:focus-visible,
 
 .content-button:hover,
 .content-button:focus-visible {
-	border-color: light-dark(#000, #fff);
-	background: light-dark(#fff, #000);
+	border-color: var(--color-border);
+	background: var(--color-surface);
 	color: light-dark(#000, #fff);
 }
 

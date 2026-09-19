@@ -6,7 +6,7 @@
 		type="button"
 		class="content-button motion-toggle"
 		data-motion-toggle
-		aria-label="アニメーションをオフにする"
+		aria-label="アニメーションを無効にする"
 	>
 		<!-- 動作中 → Reduce（一時停止） -->
 		<svg
@@ -65,7 +65,7 @@
 		const tooltip = document.querySelector('[data-motion-toggle-tooltip]');
 		if (!(button instanceof HTMLButtonElement)) return;
 		const label =
-			preference === 'reduce' ? 'アニメーションをオンにする' : 'アニメーションをオフにする';
+			preference === 'reduce' ? 'アニメーションを有効にする' : 'アニメーションを無効にする';
 		button.setAttribute('aria-label', label);
 		if (tooltip instanceof HTMLElement) tooltip.textContent = label;
 	};
