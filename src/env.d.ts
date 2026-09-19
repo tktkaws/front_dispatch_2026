@@ -21,6 +21,7 @@ interface MotionPreferenceController {
 interface SwupVisit {
 	fragmentVisit?: unknown;
 	animation: { animate: boolean };
+	scroll?: { animate?: boolean; reset?: boolean; target?: string };
 	to?: { url?: string };
 }
 
@@ -32,6 +33,7 @@ interface Window {
 		visit?: SwupVisit;
 		hooks: {
 			on: (hook: string, handler: (visit: SwupVisit) => void) => void;
+			before: (hook: string, handler: (visit: SwupVisit) => void) => void;
 		};
 	};
 }
