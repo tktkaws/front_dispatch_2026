@@ -26,7 +26,6 @@ type Props = {
 	title: string;
 	description: string;
 	pubDate: Date;
-	updatedDate?: Date;
 	heroImage?: ImageMetadata;
 	tags?: Tag[];
 	headings?: Heading[];
@@ -38,16 +37,12 @@ const {
 	title,
 	description,
 	pubDate,
-	updatedDate,
 	heroImage,
 	tags = [],
 	headings = [],
 	relatedHeading = 'Related Articles',
 	relatedPosts = [],
 } = Astro.props;
-
-const displayDate =
-	updatedDate && updatedDate > pubDate ? updatedDate : pubDate;
 ---
 
 <html lang="ja">
@@ -65,6 +60,25 @@ const displayDate =
 			data-markdown-theme="dark"
 			media="(prefers-color-scheme: dark)"
 		/>
+		{/* is:inline keeps this after github-markdown-css <link>s in the document */}
+		<style is:inline>
+			.markdown-body {
+				--borderColor-accent-emphasis: var(--color-border);
+			}
+
+			.markdown-body :is(a, [role='button'], button, summary, input):focus,
+			.markdown-body :is(a, [role='button'], button, summary, input):focus-visible,
+			.markdown-body [tabindex]:focus-visible,
+			.markdown-body .shiki:focus-visible {
+				outline: 2px solid var(--color-border);
+				outline-offset: 0;
+			}
+
+			.markdown-body :is(a, [role='button'], button, summary, input):focus:not(:focus-visible),
+			.markdown-body [tabindex]:focus:not(:focus-visible) {
+				outline: none;
+			}
+		</style>
 		<script is:inline>
 			window.__colorScheme?.apply(window.__colorScheme.resolve());
 		</script>
@@ -80,7 +94,7 @@ const displayDate =
 					</h1>
 
 					<div class="px-6 sm:px-10 lg:px-12 flex flex-wrap items-baseline gap-x-4 gap-y-2 text-sm">
-						<FormattedDate date={displayDate} />
+						<FormattedDate date={pubDate} />
 						{
 							tags.length > 0 && (
 								<ul class="m-0 flex list-none flex-wrap gap-2 p-0">
@@ -115,7 +129,7 @@ const displayDate =
 							</h1>
 
 							<div class="px-6 mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-2">
-								<FormattedDate date={displayDate} />
+								<FormattedDate date={pubDate} />
 								{
 									tags.length > 0 && (
 										<ul class="m-0 flex list-none flex-wrap gap-2 p-0">

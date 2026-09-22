@@ -22,10 +22,6 @@ const { html: htmlWithIds, headings } = withHeadingIds(post.data.body);
 const html = await highlightCodeBlocks(htmlWithIds);
 const description = plainTextExcerpt(post.data.body);
 const pubDate = new Date(post.data.publishedAt);
-const updatedDate =
-	post.data.revisedAt !== post.data.publishedAt
-		? new Date(post.data.revisedAt)
-		: undefined;
 
 const byNewest = (a: CollectionEntry<'blogs'>, b: CollectionEntry<'blogs'>) =>
 	new Date(b.data.publishedAt).valueOf() - new Date(a.data.publishedAt).valueOf();
@@ -50,7 +46,6 @@ const relatedHeading = isRelatedByTags ? 'Related Articles' : 'Latest Articles';
 	title={post.data.title}
 	description={description}
 	pubDate={pubDate}
-	updatedDate={updatedDate}
 	tags={post.data.tags}
 	headings={headings}
 	relatedHeading={relatedHeading}

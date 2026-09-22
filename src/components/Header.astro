@@ -9,11 +9,11 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 <header class="p-6 sm:p-10 lg:p-12">
 	{
 		isHome ? (
-			<h1 class="font-display text-lg sm:text-3xl lg:text-4xl font-bold">
+			<h1 class="font-display text-3xl lg:text-4xl font-bold">
 				<a href="/">{SITE_TITLE}</a>
 			</h1>
 		) : (
-			<a href="/" class="w-fit font-display text-lg sm:text-3xl lg:text-4xl font-bold">
+			<a href="/" class="w-fit font-display text-3xl lg:text-4xl font-bold">
 				{SITE_TITLE}
 			</a>
 		)
@@ -28,7 +28,7 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 <style>
 	header {
 		display: flex;
-		align-items: flex-start;
+		align-items: center;
 		justify-content: space-between;
 		gap: 1rem;
 		width: min(100%, 1600px);
