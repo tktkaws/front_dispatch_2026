@@ -56,6 +56,8 @@ const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '';
 	}
 
 	.site-controls :global(.site-control__tooltip) {
+		/* TEMP: ツールチップ非表示。復活時はこの1行を削除 */
+		display: none;
 		position: absolute;
 		top: calc(100% + 0.35rem);
 		right: 0;
