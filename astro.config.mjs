@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 import swup from '@swup/astro';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'astro/config';
+import { shikiThemes } from './src/lib/shiki-theme.ts';
 
 // https://astro.build/config
 export default defineConfig({
@@ -34,10 +35,7 @@ export default defineConfig({
 	],
 	markdown: {
 		shikiConfig: {
-			themes: {
-				light: 'github-light',
-				dark: 'github-dark',
-			},
+			themes: shikiThemes,
 		},
 	},
 	vite: {

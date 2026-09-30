@@ -1,4 +1,5 @@
 import { bundledLanguages, codeToHtml } from 'shiki';
+import { shikiThemes } from './shiki-theme';
 
 /** Strip HTML tags and collapse whitespace for meta descriptions. */
 export function plainTextExcerpt(html: string, maxLength = 120): string {
@@ -88,21 +89,16 @@ export async function highlightCodeBlocks(html: string): Promise<string> {
 			const lang = resolveLanguage(preAttrs, codeAttrs);
 			const code = decodeHtmlEntities(rawCode);
 
-			const themes = {
-				light: 'github-light',
-				dark: 'github-dark',
-			} as const;
-
 			try {
 				const highlighted = await codeToHtml(code, {
 					lang,
-					themes,
+					themes: shikiThemes,
 				});
 				return { full, highlighted };
 			} catch {
 				const highlighted = await codeToHtml(code, {
 					lang: 'plaintext',
-					themes,
+					themes: shikiThemes,
 				});
 				return { full, highlighted };
 			}
