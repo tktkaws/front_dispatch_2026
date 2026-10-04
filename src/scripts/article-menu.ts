@@ -34,7 +34,9 @@ function initArticleMenu() {
 	let preferOpenOnWide = true;
 
 	const setExpanded = () => {
-		trigger.setAttribute('aria-expanded', String(menu.classList.contains('is-open')));
+		const isOpen = menu.classList.contains('is-open');
+		trigger.setAttribute('aria-expanded', String(isOpen));
+		trigger.textContent = isOpen ? 'Close' : 'Contents';
 	};
 
 	const openMenu = () => {
@@ -100,12 +102,24 @@ function initArticleMenu() {
 		toggleMenu();
 	}, { signal });
 
-	/* コンテンツボタン・パネル以外のクリック／タッチで閉じる */
+	/* 1280px 未満のみ: コンテンツボタン・パネル以外のクリック／タッチで閉じる */
 	document.addEventListener(
 		'pointerdown',
 		(event) => {
+			if (isWide()) return;
 			if (!(event.target instanceof Node)) return;
 			if (trigger.contains(event.target) || panel.contains(event.target)) return;
+			closeMenu(true);
+		},
+		{ signal },
+	);
+
+	/* 1280px 以上: Escape で閉じる */
+	document.addEventListener(
+		'keydown',
+		(event) => {
+			if (event.key !== 'Escape') return;
+			if (!isWide() || !menu.classList.contains('is-open')) return;
 			closeMenu(true);
 		},
 		{ signal },
