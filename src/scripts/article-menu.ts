@@ -125,9 +125,11 @@ function initArticleMenu() {
 		{ signal },
 	);
 
+	/* 1280px 未満のみ: TOC リンククリックで閉じる */
 	menu.addEventListener(
 		'click',
 		(event) => {
+			if (isWide()) return;
 			if (!(event.target instanceof Element)) return;
 			if (event.target.closest('a[href^="#"]')) {
 				closeMenu(true);
