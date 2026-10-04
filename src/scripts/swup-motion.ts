@@ -39,4 +39,7 @@ function whenSwupReady(callback: (swup: NonNullable<Window['swup']>) => void) {
 	}, 50);
 }
 
-whenSwupReady(bindSwupMotion);
+if (!window.__swupMotionBound) {
+	window.__swupMotionBound = true;
+	whenSwupReady(bindSwupMotion);
+}

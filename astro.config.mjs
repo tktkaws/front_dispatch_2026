@@ -21,6 +21,9 @@ export default defineConfig({
 			containers: ['main', 'header'],
 			globalInstance: true,
 			theme: 'fade',
+			// Shared scripts already re-init via astro:page-load / page:view.
+			// Re-running inline modules stacks document listeners and breaks toggles.
+			reloadScripts: false,
 			fragments: [
 				{
 					from: ['/', '/tags/:slug', '/tags/:slug/'],

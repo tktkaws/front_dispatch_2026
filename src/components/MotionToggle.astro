@@ -97,7 +97,8 @@
 		}, 50);
 	}
 
-	if (window.__motionPreference) {
+	if (!window.__motionToggleBound && window.__motionPreference) {
+		window.__motionToggleBound = true;
 		const { resolve, toggle } = window.__motionPreference;
 		syncLabel(resolve());
 

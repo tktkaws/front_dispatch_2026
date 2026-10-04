@@ -17,5 +17,8 @@ function syncCurrentTag() {
 	}
 }
 
-syncCurrentTag();
-document.addEventListener('astro:page-load', syncCurrentTag);
+if (!window.__tagsCurrentBound) {
+	window.__tagsCurrentBound = true;
+	syncCurrentTag();
+	document.addEventListener('astro:page-load', syncCurrentTag);
+}

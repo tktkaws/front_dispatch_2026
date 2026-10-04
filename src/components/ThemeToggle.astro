@@ -100,8 +100,9 @@
 		}, 50);
 	}
 
-	if (window.__colorScheme) {
-		const { resolve, toggle } = window.__colorScheme;
+	if (!window.__themeToggleBound && window.__colorScheme) {
+		window.__themeToggleBound = true;
+		const { resolve, apply, toggle } = window.__colorScheme;
 		syncLabel(resolve());
 
 		// Delegate so handlers survive swup replacing <header>
@@ -119,6 +120,8 @@
 
 		whenSwupReady((swup) => {
 			swup.hooks.on('page:view', () => {
+				// Re-apply after head swap (markdown theme <link> media attrs)
+				apply(resolve());
 				syncLabel(resolve());
 			});
 		});

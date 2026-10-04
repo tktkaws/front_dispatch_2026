@@ -28,6 +28,11 @@ interface SwupVisit {
 interface Window {
 	__colorScheme?: ColorSchemeController;
 	__motionPreference?: MotionPreferenceController;
+	__themeToggleBound?: boolean;
+	__motionToggleBound?: boolean;
+	__articleMenuBound?: boolean;
+	__tagsCurrentBound?: boolean;
+	__swupMotionBound?: boolean;
 	__homeArticlesStaggerBound?: boolean;
 	swup?: {
 		visit?: SwupVisit;

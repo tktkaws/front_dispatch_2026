@@ -123,5 +123,8 @@ function initArticleMenu() {
 	);
 }
 
-initArticleMenu();
-document.addEventListener('astro:page-load', initArticleMenu);
+if (!window.__articleMenuBound) {
+	window.__articleMenuBound = true;
+	initArticleMenu();
+	document.addEventListener('astro:page-load', initArticleMenu);
+}
