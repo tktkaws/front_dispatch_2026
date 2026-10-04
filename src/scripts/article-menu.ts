@@ -21,12 +21,17 @@ function initArticleMenu() {
 		return;
 	}
 
+	const WIDE_MIN = 1280;
+
 	const getInset = () => {
 		const rem =
 			parseFloat(getComputedStyle(menu).getPropertyValue('--article-menu-inset')) || 1.5;
 		return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
 	};
+	const isWide = () => window.matchMedia(`(min-width: ${WIDE_MIN}px)`).matches;
 	let headerGone = false;
+	/** ワイド画面でメニュー出現時に自動で開くか（ユーザーが閉じたら false、非表示でリセット） */
+	let preferOpenOnWide = true;
 
 	const setExpanded = () => {
 		trigger.setAttribute('aria-expanded', String(menu.classList.contains('is-open')));
@@ -37,15 +42,17 @@ function initArticleMenu() {
 		setExpanded();
 	};
 
-	const closeMenu = () => {
+	const closeMenu = (fromUser = false) => {
 		menu.classList.remove('is-open');
+		if (fromUser) preferOpenOnWide = false;
 		setExpanded();
 	};
 
 	const toggleMenu = () => {
 		if (menu.classList.contains('is-open')) {
-			closeMenu();
+			closeMenu(true);
 		} else {
+			preferOpenOnWide = true;
 			openMenu();
 		}
 	};
@@ -57,6 +64,9 @@ function initArticleMenu() {
 		menu.classList.toggle('is-visible', headerGone);
 		if (!headerGone) {
 			closeMenu();
+			preferOpenOnWide = true;
+		} else if (preferOpenOnWide && isWide()) {
+			openMenu();
 		}
 		setExpanded();
 	};
@@ -76,6 +86,16 @@ function initArticleMenu() {
 	window.addEventListener('resize', syncMenu, { signal });
 	syncMenu();
 
+	/* 1280px 未満になったら開いているパネルを閉じる */
+	const wideMq = window.matchMedia(`(min-width: ${WIDE_MIN}px)`);
+	wideMq.addEventListener(
+		'change',
+		(event) => {
+			if (!event.matches) closeMenu();
+		},
+		{ signal },
+	);
+
 	trigger.addEventListener('click', () => {
 		toggleMenu();
 	}, { signal });
@@ -86,7 +106,7 @@ function initArticleMenu() {
 		(event) => {
 			if (!(event.target instanceof Node)) return;
 			if (trigger.contains(event.target) || panel.contains(event.target)) return;
-			closeMenu();
+			closeMenu(true);
 		},
 		{ signal },
 	);
@@ -96,7 +116,7 @@ function initArticleMenu() {
 		(event) => {
 			if (!(event.target instanceof Element)) return;
 			if (event.target.closest('a[href^="#"]')) {
-				closeMenu();
+				closeMenu(true);
 			}
 		},
 		{ signal },

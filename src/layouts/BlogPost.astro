@@ -183,6 +183,7 @@ const {
 		/* content-button: padding 0.75rem×2 + font-size 0.875rem × line-height 1.2 + border 2px */
 		--content-button-height: calc(1.5rem + 0.875rem * 1.2 + 2px);
 		--article-menu-inset: 1.5rem; /* p-6 と揃える */
+		--article-menu-panel-width: 26rem;
 		position: relative;
 		flex: 1;
 		display: flex;
@@ -209,6 +210,13 @@ const {
 		max-width: 980px;
 		font-family: var(--font-sans);
 		flex: 1;
+	}
+
+	/* ワイド画面: Contents パネル分の右余白を本文のみに確保（本文幅は維持） */
+	@media (min-width: 1280px) {
+		.markdown-body {
+			margin-right: calc(var(--article-menu-panel-width) + var(--article-menu-inset));
+		}
 	}
 	:global(.markdown-body :is(h1, h2, h3, h4, h5, h6)) {
 		font-family: var(--font-display);
@@ -257,9 +265,8 @@ const {
 	:global(.markdown-body blockquote) {
 		color: var(--color-muted);
 		border-left: 0.1875em solid #cccccc;
-	}
-	:global(.markdown-body blockquote > *) {
 		margin-left: 1rem;
+		padding-left: 1rem;
 	}
 	/* 目次と同じ "-" リスト */
 	:global(.markdown-body ul:not(.contains-task-list)) {
@@ -338,7 +345,7 @@ const {
 
 	.article-menu__panel {
 		display: none;
-		width: min(calc(100vw - (2 * var(--article-menu-inset))), 26rem);
+		width: min(calc(100vw - (2 * var(--article-menu-inset))), var(--article-menu-panel-width));
 		/* 上余白 + ボタン高さ + gap を除いた表示可能高さ */
 		max-height: calc(
 			100dvh - var(--article-menu-inset) * 2 - var(--content-button-height) - 0.5rem
