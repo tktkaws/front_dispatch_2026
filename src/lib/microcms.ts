@@ -94,7 +94,7 @@ function resolveLanguage(...attrs: string[]): string {
 
 /** Highlight microCMS `<pre><code>` blocks with Shiki. */
 export async function highlightCodeBlocks(html: string): Promise<string> {
-	const codeBlockPattern = /<pre([^>]*)>\s*<code([^>]*)>([\s\S]*?)<\/code>\s*<\/pre>/gi;
+	const codeBlockPattern = /(?:<div\b([^>]*\bdata-filename\s*=\s*(?:"[^"]*"|'[^']*')[^>]*)>\s*)?<pre([^>]*)>\s*<code([^>]*)>([\s\S]*?)<\/code>\s*<\/pre>/gi;
 	const matches = [...html.matchAll(codeBlockPattern)];
 
 	if (matches.length === 0) {
@@ -103,23 +103,33 @@ export async function highlightCodeBlocks(html: string): Promise<string> {
 
 	const replacements = await Promise.all(
 		matches.map(async (match) => {
-			const [full, preAttrs = '', codeAttrs = '', rawCode = ''] = match;
+			const [full, wrapperAttrs, preAttrs = '', codeAttrs = '', rawCode = ''] = match;
 			const lang = resolveLanguage(preAttrs, codeAttrs);
 			const code = decodeHtmlEntities(rawCode);
+			const lineCount = code.replace(/\r\n?/g, '\n').replace(/\n$/, '').split('\n').length;
 
+			let highlighted: string;
 			try {
-				const highlighted = await codeToHtml(code, {
+				highlighted = await codeToHtml(code, {
 					lang,
 					themes: shikiThemes,
 				});
-				return { full, highlighted };
 			} catch {
-				const highlighted = await codeToHtml(code, {
+				highlighted = await codeToHtml(code, {
 					lang: 'plaintext',
 					themes: shikiThemes,
 				});
-				return { full, highlighted };
 			}
+			if (lineCount >= 10) {
+				const filename = wrapperAttrs?.match(/\bdata-filename\s*=\s*(?:"([^"]*)"|'([^']*)')/i);
+				const title = filename?.[1] ?? filename?.[2];
+				const safeTitle = title ? decodeHtmlEntities(title).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') : '';
+				const lightBg = highlighted.match(/background-color:([^;"]+)/)?.[1] ?? 'transparent';
+				const darkBg = highlighted.match(/--shiki-dark-bg:([^;"]+)/)?.[1] ?? lightBg;
+				highlighted = `<details class="code-accordion" style="--code-bg:${lightBg};--code-dark-bg:${darkBg}"><summary>${safeTitle || `コードを表示（${lineCount}行）`}</summary>${highlighted}</details>`;
+			}
+			if (wrapperAttrs !== undefined) highlighted = `<div${wrapperAttrs}>${highlighted}`;
+			return { full, highlighted };
 		}),
 	);
 

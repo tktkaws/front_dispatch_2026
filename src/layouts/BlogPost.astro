@@ -280,7 +280,50 @@ const {
 		content: '- ';
 		margin-left: -1.25em;
 	}
+	:global(.markdown-body .code-accordion) {
+		margin-top: 1.5em;
+		margin-bottom: 16px;
+		border: 1px solid var(--color-border-muted);
+		border-radius: 6px;
+	}
+	:global(.markdown-body .code-accordion summary) {
+		padding: 0.75rem 1.25rem;
+		cursor: pointer;
+		background-color: light-dark(var(--code-bg), var(--code-dark-bg));
+		border-radius: 6px;
+	}
+	:global(.markdown-body .code-accordion[open] summary) {
+		border-radius: 6px 6px 0 0;
+	}
+	:global(.markdown-body .code-accordion .shiki) {
+		margin: 0;
+		border: 0;
+		border-top: 1px solid var(--color-border-muted);
+		border-radius: 0 0 6px 6px;
+	}
+	:global(.markdown-body .code-accordion[open] .shiki) {
+		animation: code-reveal 0.25s ease-out;
+	}
+	@keyframes code-reveal {
+		from {
+			opacity: 0;
+			clip-path: inset(0 0 100% 0);
+		}
+		to {
+			opacity: 1;
+			clip-path: inset(0);
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		:global(.markdown-body .code-accordion[open] .shiki) {
+			animation: none;
+		}
+	}
+	:global(html[data-motion='reduce'] .markdown-body .code-accordion[open] .shiki) {
+		animation: none;
+	}
 	:global(.markdown-body .shiki) {
+		margin-top: 1.5em;
 		padding: 1rem 1.25rem;
 		overflow-x: auto;
 		border: 1px solid var(--color-border-muted);
