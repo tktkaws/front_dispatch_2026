@@ -1,5 +1,5 @@
-const ENTER_MS = 400;
-const STAGGER_MS = 100;
+const ENTER_MS = 200;
+const STAGGER_MS = 10;
 
 function isHomePath(pathname: string) {
 	return pathname === '/' || pathname === '';
