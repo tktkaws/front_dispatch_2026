@@ -5,6 +5,7 @@ import {
 	highlightCodeBlocks,
 	plainTextExcerpt,
 	withHeadingIds,
+	withOrderedListIds,
 } from '../../lib/microcms';
 
 export async function getStaticPaths() {
@@ -19,7 +20,7 @@ type Props = CollectionEntry<'blogs'>;
 
 const post = Astro.props;
 const { html: htmlWithIds, headings } = withHeadingIds(post.data.body);
-const html = await highlightCodeBlocks(htmlWithIds);
+const html = withOrderedListIds(await highlightCodeBlocks(htmlWithIds));
 const description = plainTextExcerpt(post.data.body);
 const pubDate = new Date(post.data.publishedAt);
 
