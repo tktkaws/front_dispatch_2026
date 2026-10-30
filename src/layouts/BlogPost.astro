@@ -389,7 +389,12 @@ const {
 
 	.article-menu.is-open .article-menu__trigger {
 		border-color: light-dark(#000, #fff);
-		background: light-dark(#fff, #000);
+		background: #000;
+		color: #fff;
+	}
+	.article-menu.is-open .article-menu__trigger:is(:hover, :focus-visible) {
+		border-color: var(--color-border);
+		background: var(--color-surface);
 		color: light-dark(#000, #fff);
 	}
 
