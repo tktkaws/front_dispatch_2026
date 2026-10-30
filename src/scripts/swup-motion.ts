@@ -6,6 +6,12 @@ function disableMotionForVisit(visit: SwupVisit) {
 }
 
 function bindSwupMotion(swup: NonNullable<Window['swup']>) {
+	const scrollPlugin = swup.findPlugin('SwupScrollPlugin');
+	if (scrollPlugin) {
+		scrollPlugin.options.offset = (target) =>
+			parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+	}
+
 	// before: so scroll.animate is cleared before Scroll Plugin scrolls
 	for (const hook of ['visit:start', 'link:self', 'link:anchor'] as const) {
 		swup.hooks.before(hook, disableMotionForVisit);

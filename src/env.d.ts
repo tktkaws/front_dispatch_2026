@@ -36,6 +36,7 @@ interface Window {
 	__homeArticlesStaggerBound?: boolean;
 	swup?: {
 		visit?: SwupVisit;
+		findPlugin: (name: string) => { options: { offset: number | ((target: Element) => number) } } | undefined;
 		hooks: {
 			on: (hook: string, handler: (visit: SwupVisit) => void) => void;
 			before: (hook: string, handler: (visit: SwupVisit) => void) => void;

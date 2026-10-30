@@ -21,6 +21,24 @@ export type Heading = {
 	text: string;
 };
 
+/** Add sequential fragment identifiers to ordered-list items in article content. */
+export function withOrderedListIds(html: string): string {
+	let counter = 0;
+	const lists: string[] = [];
+	return html.replace(/<\/?(?:ol|ul)\b[^>]*>|<li\b[^>]*>/gi, (tag) => {
+		const list = tag.match(/^<(\/?)(ol|ul)\b/i);
+		if (list) {
+			if (list[1]) lists.pop();
+			else lists.push(list[2].toLowerCase());
+			return tag;
+		}
+		if (lists.at(-1) !== 'ol') return tag;
+		counter += 1;
+		if (/\bid\s*=/i.test(tag)) return tag;
+		return tag.replace(/>$/, ` id="ref-${counter}">`);
+	});
+}
+
 /** Extract h2/h3 headings and ensure each has an id for in-page links. */
 export function withHeadingIds(html: string): { html: string; headings: Heading[] } {
 	const headings: Heading[] = [];
