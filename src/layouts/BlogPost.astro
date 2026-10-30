@@ -209,6 +209,7 @@ const {
 		min-width: 200px;
 		max-width: 980px;
 		font-family: var(--font-sans);
+		line-height: 1.8;
 		flex: 1;
 	}
 
@@ -270,6 +271,9 @@ const {
 	}
 	:global(.markdown-body figure) {
 		margin: 3em 0 0;
+	}
+	:global(.markdown-body ol) {
+		margin-top: 2em;
 	}
 	/* 目次と同じ "-" リスト */
 	:global(.markdown-body ul:not(.contains-task-list)) {
